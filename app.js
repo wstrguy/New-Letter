@@ -1,8 +1,9 @@
 const express = require("express");
-const dotenv = require("dotenv");
 const nodeMailer = require("nodemailer")
 const bodyParser = require("body-parser");
 const request = require("request")
+const dotenv = require("dotenv").config();
+
 // const https = require("https")
 
 const app = express();
@@ -37,15 +38,15 @@ app.post("/", (req, res) => {
     };
   
     let jsonData = JSON.stringify(data);
-  
-    const uri = "https://us8.api.mailchimp.com/3.0/lists/649c1b3d11";
+    
+    const uri = `https://us8.api.mailchimp.com/3.0/lists/${process.env.MAILCHIMP_LIST_ID}`;
   
     let options = {
       url: uri,
       method: "POST",
       auth: {
         user: 'temi',
-        pass: '3ed4f713aeae74fbc0c2b703c6365e68-us8'
+        pass: process.env.MAILCHIMP_APIKEY
       },
       body: jsonData
     };
@@ -68,6 +69,7 @@ app.post("/success", (req, res) => {
     res.redirect("/")
 });
 
-app.listen(3000, () => {
-    console.log("server is running on port 3000");
+const port = process.env.PORT;
+app.listen(port, () => {
+    console.log(`server is running on port ${port}`);
 });
